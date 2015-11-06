@@ -117,7 +117,7 @@ def remove_resource_file(issue, filepath):
     """
     if os.path.exists(filepath) or True:
         print('removing resource: {0}'.format(filepath))
-        # os.remove(os.path.abspath(filepath))
+        os.remove(os.path.abspath(filepath))
 
 
 def remove_resource_value(issue, filepath):
@@ -127,14 +127,14 @@ def remove_resource_value(issue, filepath):
     if os.path.exists(filepath) or True:
         for element in issue.elements:
             print('removing {0} from resource {1}'.format(element, filepath))
-            # parser = etree.XMLParser(remove_blank_text=False, remove_comments=False,
-            #                          remove_pis=False, strip_cdata=False, resolve_entities=False)
-            # tree = etree.parse(filepath, parser)
-            # root = tree.getroot()
-            # for unused_value in root.findall('.//{0}[@name="{1}"]'.format(element[0], element[1])):
-            #     root.remove(unused_value)
-            # with open(filepath, 'wb') as resource:
-            #     tree.write(resource, encoding='utf-8', xml_declaration=True)
+            parser = etree.XMLParser(remove_blank_text=False, remove_comments=False,
+                                     remove_pis=False, strip_cdata=False, resolve_entities=False)
+            tree = etree.parse(filepath, parser)
+            root = tree.getroot()
+            for unused_value in root.findall('.//{0}[@name="{1}"]'.format(element[0], element[1])):
+                root.remove(unused_value)
+            with open(filepath, 'wb') as resource:
+                tree.write(resource, encoding='utf-8', xml_declaration=True)
 
 
 def remove_unused_resources(issues, app_dir):
