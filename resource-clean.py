@@ -51,9 +51,6 @@ def parse_args():
     Parse command line arguments.
     """
     parser = argparse.ArgumentParser()
-    parser.add_argument('--lint',
-                        help='Path to the ADT lint tool. If not specified it assumes lint tool is in your path',
-                        default='lint')
     parser.add_argument('--app',
                         help='Path to the Android app. If not specifies it assumes current directory is your Android '
                              'app directory',
@@ -61,11 +58,8 @@ def parse_args():
     parser.add_argument('--xml',
                         help='Path to the list result. If not specifies linting will be done by the script',
                         default=None)
-    parser.add_argument('--ignore-layouts',
-                        help='Should ignore layouts',
-                        action='store_true')
     args = parser.parse_args()
-    return args.lint, args.app, args.xml, args.ignore_layouts
+    return  args.app, args.xml
 
 
 def run_lint_command():
@@ -117,7 +111,7 @@ def parse_lint_result(lint_result_path):
     return issues
 
 
-def remove_resource_file(issue, filepath, ignore_layouts):
+def remove_resource_file(issue, filepath):
     """
     Delete a file from the filesystem
     """
@@ -143,22 +137,22 @@ def remove_resource_value(issue, filepath):
             #     tree.write(resource, encoding='utf-8', xml_declaration=True)
 
 
-def remove_unused_resources(issues, app_dir, ignore_layouts):
+def remove_unused_resources(issues, app_dir):
     """
     Remove the file or the value inside the file depending if the whole file is unused or not.
     """
     for issue in issues:
         filepath = os.path.join(app_dir, issue.filepath)
         if issue.remove_file:
-            remove_resource_file(issue, filepath, ignore_layouts)
+            remove_resource_file(issue, filepath)
         else:
             remove_resource_value(issue, filepath)
 
 
 def main():
-    lint, app_dir, lint_result_path, ignore_layouts = parse_args()
+    app_dir, lint_result_path = parse_args()
     issues = parse_lint_result(lint_result_path)
-    remove_unused_resources(issues, app_dir, ignore_layouts)
+    remove_unused_resources(issues, app_dir)
 
 
 if __name__ == '__main__':
