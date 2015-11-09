@@ -115,7 +115,7 @@ def remove_resource_file(issue, filepath):
     """
     Delete a file from the filesystem
     """
-    if os.path.exists(filepath) or True:
+    if os.path.exists(filepath):
         print('removing resource: {0}'.format(filepath))
         os.remove(os.path.abspath(filepath))
 
@@ -124,7 +124,7 @@ def remove_resource_value(issue, filepath):
     """
     Read an xml file and remove an element which is unused, then save the file back to the filesystem
     """
-    if os.path.exists(filepath) or True:
+    if os.path.exists(filepath):
         for element in issue.elements:
             print('removing {0} from resource {1}'.format(element, filepath))
             parser = etree.XMLParser(remove_blank_text=False, remove_comments=False,
