@@ -90,6 +90,12 @@ def get_relative_file_path(file_path):
 
     return None
 
+def filter_directory_path(path):
+    if path[-1] == '/':
+        return path[0:len(path)-1]
+
+    return path
+
 def parse_lint_result(lint_result_path):
     """
     Parse lint-result.xml and create Issue for every problem found
@@ -101,7 +107,6 @@ def parse_lint_result(lint_result_path):
             filepath = get_relative_file_path(location.get('FQNAME'))
             # if the location contains line and/or column attribute not the entire resource is unused. that's a guess ;)
             # TODO stop guessing
-            line = issue_xml.find('line')
             issue = Issue(filepath, False)
             issue.add_element(issue_xml.find('description').text)
             # type is drawable and anim to delete file
@@ -151,6 +156,7 @@ def remove_unused_resources(issues, app_dir):
 
 def main():
     app_dir, lint_result_path = parse_args()
+    app_dir = filter_directory_path(app_dir)
     issues = parse_lint_result(lint_result_path)
     remove_unused_resources(issues, app_dir)
 
